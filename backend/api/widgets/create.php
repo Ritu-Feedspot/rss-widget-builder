@@ -1,4 +1,9 @@
 <?php
+header('Access-Control-Allow-Origin: http://localhost:3000');
+header('Access-Control-Allow-Methods: POST, OPTIONS');
+header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Credentials: true');
+header('Content-Type: application/json');
 require_once '../../db/connect.php';
 require_once '../../classes/Auth.php';
 
@@ -9,49 +14,64 @@ try {
     $db = new Database();
     $input = json_decode(file_get_contents('php://input'), true);
     
-    // Add user_id to the widget creation
+    // Group settings into JSON objects by section
+    $generalSettings = json_encode([
+        'width' => $input['width'] ?? 350,
+        'height' => $input['height'] ?? 400,
+        'responsive' => $input['responsive'] ?? false,
+        'view_type' => $input['viewType'] ?? 'list',
+        'font_style' => $input['fontStyle'] ?? 'Arial',
+        'text_align' => $input['textAlign'] ?? 'left',
+        'show_border' => $input['showBorder'] ?? false,
+        'border_color' => $input['borderColor'] ?? '#dbdbdb',
+        'corner_style' => $input['cornerStyle'] ?? 'square',
+        'content_bg_color' => $input['contentBgColor'] ?? '#ffffff'
+    ]);
+    
+    $feedTitleSettings = json_encode([
+        'title' => $input['title'] ?? '',
+        'title_size' => $input['titleSize'] ?? 16,
+        'title_color' => $input['titleColor'] ?? '#000000',
+        'title_bold' => $input['titleBold'] ?? false,
+        'custom_title' => $input['customTitle'] ?? false,
+        'title_link' => $input['titleLink'] ?? '',
+        'title_bg_color' => $input['titleBgColor'] ?? '#ffffff'
+    ]);
+    
+    $feedContentSettings = json_encode([
+        'post_count' => $input['postCount'] ?? 5,
+        'show_author' => $input['showAuthor'] ?? false,
+        'show_date' => $input['showDate'] ?? false,
+        'date_format' => $input['dateFormat'] ?? 'long',
+        'show_title' => $input['showTitle'] ?? true,
+        'bold_title' => $input['boldTitle'] ?? false,
+        'max_title_chars' => $input['maxTitleChars'] ?? 55,
+        'content_title_size' => $input['contentTitleSize'] ?? 14,
+        'content_title_color' => $input['contentTitleColor'] ?? '#000000',
+        'show_original_link' => $input['showOriginalLink'] ?? false
+    ]);
+    
+    $followingViewsSettings = json_encode([
+        // Add any following/views specific settings here
+        // This can be expanded based on your requirements
+    ]);
+    
+    // Insert with grouped JSON settings
     $sql = "INSERT INTO widgets (
-        user_id, name, feed_url, selected_folder, width, height, responsive,
-        title, title_size, title_color, title_bold, show_author, show_date,
-        post_count, view_type, font_style, text_align, show_border,
-        border_color, corner_style, custom_title, title_link,
-        title_bg_color, show_original_link, content_bg_color,
-        date_format, show_title, bold_title, max_title_chars,
-        content_title_size, content_title_color, created_at
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+        user_id, name, feed_url, selected_folder, 
+        general_settings, feed_title_settings, feed_content_settings, following_views_settings,
+        created_at
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())";
     
     $params = [
-        $_SESSION['user_id'], // Add user ID as first parameter
+        $_SESSION['user_id'],
         $input['name'] ?? 'Untitled Widget',
         $input['feedUrl'] ?? '',
         $input['selectedFolder'] ?? '',
-        $input['width'] ?? 350,
-        $input['height'] ?? 400,
-        $input['responsive'] ? 1 : 0,
-        $input['title'] ?? '',
-        $input['titleSize'] ?? 16,
-        $input['titleColor'] ?? '#000000',
-        $input['titleBold'] ? 1 : 0,
-        $input['showAuthor'] ? 1 : 0,
-        $input['showDate'] ? 1 : 0,
-        $input['postCount'] ?? 5,
-        $input['viewType'] ?? 'list',
-        $input['fontStyle'] ?? 'Arial',
-        $input['textAlign'] ?? 'left',
-        $input['showBorder'] ? 1 : 0,
-        $input['borderColor'] ?? '#dbdbdb',
-        $input['cornerStyle'] ?? 'square',
-        $input['customTitle'] ? 1 : 0,
-        $input['titleLink'] ?? '',
-        $input['titleBgColor'] ?? '#ffffff',
-        $input['showOriginalLink'] ? 1 : 0,
-        $input['contentBgColor'] ?? '#ffffff',
-        $input['dateFormat'] ?? 'long',
-        $input['showTitle'] ? 1 : 0,
-        $input['boldTitle'] ? 1 : 0,
-        $input['maxTitleChars'] ?? 55,
-        $input['contentTitleSize'] ?? 14,
-        $input['contentTitleColor'] ?? '#000000'
+        $generalSettings,
+        $feedTitleSettings,
+        $feedContentSettings,
+        $followingViewsSettings
     ];
     
     $widgetId = $db->insert($sql, $params);

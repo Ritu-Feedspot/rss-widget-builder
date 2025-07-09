@@ -1,9 +1,21 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 
 export default function Customers() {
-  const [customers, setCustomers] = useState([])
+  // ✅ Static customer list
+  const staticCustomers = [
+    { id: 1, name: "TechCrunch", logo: "/techcrunchlogo.png", website: "techcrunch.com" },
+    { id: 2, name: "Mashable", logo: "/mashablelogo.png", website: "mashable.com" },
+    { id: 3, name: "The Verge", logo: "/vergelogo.jpeg", website: "theverge.com" },
+    { id: 4, name: "Wired", logo: "/wiredlogo.png", website: "wired.com" },
+  ]
+
+  const [customers] = useState(staticCustomers)
+
+  // 🔒 Optional: Fetch from backend in future
+  /*
+  import { useEffect } from "react"
 
   useEffect(() => {
     fetchCustomers()
@@ -16,21 +28,10 @@ export default function Customers() {
       setCustomers(data)
     } catch (error) {
       console.error("Error fetching customers:", error)
-      // Fallback to static customers
-      setCustomers(getStaticCustomers())
+      setCustomers(staticCustomers) // fallback
     }
   }
-
-  const getStaticCustomers = () => [
-    { id: 1, name: "TechCrunch", logo: "/placeholder.svg?height=80&width=120", website: "techcrunch.com" },
-    { id: 2, name: "Mashable", logo: "/placeholder.svg?height=80&width=120", website: "mashable.com" },
-    { id: 3, name: "The Verge", logo: "/placeholder.svg?height=80&width=120", website: "theverge.com" },
-    { id: 4, name: "Wired", logo: "/placeholder.svg?height=80&width=120", website: "wired.com" },
-    { id: 5, name: "Ars Technica", logo: "/placeholder.svg?height=80&width=120", website: "arstechnica.com" },
-    { id: 6, name: "Engadget", logo: "/placeholder.svg?height=80&width=120", website: "engadget.com" },
-    { id: 7, name: "Gizmodo", logo: "/placeholder.svg?height=80&width=120", website: "gizmodo.com" },
-    { id: 8, name: "ReadWrite", logo: "/placeholder.svg?height=80&width=120", website: "readwrite.com" },
-  ]
+  */
 
   return (
     <div className="customers-page">
@@ -93,13 +94,13 @@ export default function Customers() {
         </div>
       </div>
 
-      <div className="join-cta">
+      {/* <div className="join-cta">
         <h2>Join Thousands of Satisfied Customers</h2>
         <p>Start creating beautiful RSS widgets for your website today</p>
         <a href="/createwidgets" className="btn btn-primary btn-large">
           Get Started Free
         </a>
-      </div>
+      </div> */}
     </div>
   )
 }

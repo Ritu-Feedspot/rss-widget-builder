@@ -1,8 +1,9 @@
 "use client"
 
 import { useState } from "react"
-import CategorySearchBar from "../components/createwidgets/CategorySearchBar"
-import FolderFeedDropdown from "../components/createwidgets/FolderFeedDropdown"
+// import CategorySearchBar from "../components/form/CategorySearchBar"
+// import FolderFeedDropdown from "../components/form/FolderFeedDropdown"
+import FeedSourceSection from "@/components/form/FeedSourceSection"
 import GeneralSection from "../components/form/GeneralSection"
 import FeedTitleSection from "../components/form/FeedTitleSection"
 import FeedContentSection from "../components/form/FeedContentSection"
@@ -86,6 +87,7 @@ export default function CreateWidgets() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: "include",
         body: JSON.stringify({
           ...widgetConfig,
           name: widgetName,
@@ -170,9 +172,9 @@ export default function CreateWidgets() {
     </div>
       <div className="widget-builder">
         <div className="form-section">
-          <CategorySearchBar onSelect={handleFeedSelect} />
+          {/* <CategorySearchBar onSelect={handleFeedSelect} />
 
-          <div className="rss-feed-section">
+          <div className="form-section">
             <h3>RSS Feed URL</h3>
             <input
               type="text"
@@ -183,8 +185,14 @@ export default function CreateWidgets() {
             />
             <p>OR Select your Feedspot account or Folder Feed URL</p>
             <FolderFeedDropdown selected={widgetConfig.selectedFolder} onSelect={handleFolderSelect} />
-          </div>
-
+          </div> */}
+          <FeedSourceSection
+            feedUrl={widgetConfig.feedUrl}
+            selectedFolder={widgetConfig.selectedFolder}
+            onFeedSelect={handleFeedSelect}
+            onFolderSelect={handleFolderSelect}
+          />
+      
           <FollowingViewsSection viewType={widgetConfig.viewType} onChange={(type) => updateConfig("viewType", type)} />
 
           <GeneralSection config={widgetConfig} onChange={updateConfig} />

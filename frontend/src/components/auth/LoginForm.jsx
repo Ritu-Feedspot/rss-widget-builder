@@ -14,43 +14,40 @@ export default function LoginForm({ onSuccess, onSwitchToRegister }) {
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost/rss-widget-builder/backend/api"
 
   const handleSubmit = async (e) => {
-    e.preventDefault()
-    setLoading(true)
-    setError("")
+  e.preventDefault()
+  setLoading(true)
+  setError("")
 
-    try {
-      console.log("Attempting login to:", `${API_BASE_URL}/auth/login.php`)
+  try {
+    const response = await fetch(`${API_BASE_URL}/auth/login.php`, {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
 
-      const response = await fetch(`${API_BASE_URL}/auth/login.php`, {
-        method: "POST",
-        credentials: "include",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      })
+    const result = await response.json()
+    console.log("Login result:", result)
 
-      console.log("Login response status:", response.status)
-
-      if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`)
-      }
-
-      const result = await response.json()
-      console.log("Login result:", result)
-
-      if (result.success) {
-        onSuccess(result.user)
-      } else {
-        setError(result.error || "Login failed")
-      }
-    } catch (err) {
-      console.error("Login error:", err)
-      setError(`Network error: ${err.message}. Please check if the backend is running.`)
-    } finally {
-      setLoading(false)
+    if (!response.ok || !result.success) {
+      setError(result.error || "Incorrect credentials. User not found.")
+      console.error("Login failed:", result.error) // still log error
+      return
     }
+
+    // Success
+    onSuccess(result.user)
+
+  } catch (err) {
+    console.error("Login error:", err)
+    setError(`Network error: ${err.message}`)
+  } finally {
+    setLoading(false)
   }
+}
+
 
   const handleChange = (e) => {
     setFormData({

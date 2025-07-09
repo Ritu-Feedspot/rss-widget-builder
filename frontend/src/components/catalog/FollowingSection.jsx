@@ -25,7 +25,6 @@ export default function FollowingSection({ followedFeeds, userFolders, onRefresh
   return (
     <div className="following-section">
       <h2>Following</h2>
-
       <div className="folders-list">
         {userFolders.map((folder) => (
           <div key={folder.id} className="folder-item">

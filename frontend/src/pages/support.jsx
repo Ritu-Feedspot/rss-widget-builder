@@ -1,127 +1,103 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import Link from "next/link"
 
-export default function MyWidgets() {
-  const [widgets, setWidgets] = useState([])
-  const [loading, setLoading] = useState(true)
+export default function Support() {
+  const [faqs, setFaqs] = useState([])
+  const [openFaq, setOpenFaq] = useState(null)
 
   useEffect(() => {
-    fetchWidgets()
+    fetchFAQs()
   }, [])
 
-  const fetchWidgets = async () => {
+  const fetchFAQs = async () => {
     try {
-      const response = await fetch("http://localhost/rss-widget-builder/backend/api/widgets/read.php")
+      const response = await fetch("http://localhost/rss-widget-builder/backend/api/support/getFAQs.php")
       const data = await response.json()
-      setWidgets(data)
+      setFaqs(data)
     } catch (error) {
-      console.error("Error fetching widgets:", error)
-    } finally {
-      setLoading(false)
+      console.error("Error fetching FAQs:", error)
     }
   }
 
-  const handleDeleteWidget = async (widgetId) => {
-    if (confirm("Are you sure you want to delete this widget?")) {
-      try {
-        await fetch("http://localhost/rss-widget-builder/backend/api/widgets/delete.php", {
-          method: "DELETE",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: widgetId }),
-        })
-        fetchWidgets() // Refresh the list
-      } catch (error) {
-        console.error("Error deleting widget:", error)
-      }
-    }
-  }
-
-  const generateEmbedCode = (widget) => {
-    return `<iframe src="${window.location.origin}/embed/${widget.id}" width="${widget.width}" height="${widget.height}" frameborder="0"></iframe>`
-  }
-
-  if (loading) {
-    return (
-      <div className="my-widgets-page">
-        <div className="loading">Loading widgets...</div>
-      </div>
-    )
+  const toggleFaq = (index) => {
+    setOpenFaq(openFaq === index ? null : index)
   }
 
   return (
-    <div className="my-widgets-page">
+    <div className="support-page">
       <div className="page-header">
-        <h1>My Widgets</h1>
-        <Link href="/createwidgets" className="btn btn-primary">
-          Create New Widget
-        </Link>
+        <h1>Support & FAQ</h1>
+        <p>Find answers to common questions about RSS widgets</p>
       </div>
 
-      {widgets.length === 0 ? (
-        <div className="empty-state">
-          <h2>No widgets created yet</h2>
-          <p>Create your first RSS widget to get started</p>
-          <Link href="/createwidgets" className="btn btn-primary">
-            Create Widget
-          </Link>
+      <div className="support-content">
+        <div className="contact-info">
+          <h2>Need Help?</h2><br/>
+          <p>If you can't find the answer you're looking for, feel free to contact us:</p>
+          <div className="contact-methods">
+            <div className="contact-method">
+              <strong>Email:</strong> support@feedspot.com
+            </div>
+            <div className="contact-method">
+              <strong>Response Time:</strong> Within 24 hours
+            </div>
+          </div>
         </div>
-      ) : (
-        <div className="widgets-table-container">
-          <table className="widgets-table">
-            <thead>
-              <tr>
-                <th>Widget Name</th>
-                <th>Feed Source</th>
-                <th>Dimensions</th>
-                <th>Created</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {widgets.map((widget) => (
-                <tr key={widget.id}>
-                  <td>
-                    <div className="widget-name">{widget.name || `Widget ${widget.id}`}</div>
-                  </td>
-                  <td>
-                    <div className="feed-source">{widget.feed_title || widget.feed_url}</div>
-                  </td>
-                  <td>
-                    <div className="dimensions">
-                      {widget.responsive ? "Responsive" : `${widget.width}x${widget.height}`}
-                    </div>
-                  </td>
-                  <td>
-                    <div className="created-date">{new Date(widget.created_at).toLocaleDateString()}</div>
-                  </td>
-                  <td>
-                    <div className="widget-actions">
-                      <Link href={`/createwidgets?edit=${widget.id}`} className="btn btn-small btn-secondary">
-                        Edit
-                      </Link>
-                      <button
-                        className="btn btn-small btn-primary"
-                        onClick={() => {
-                          const code = generateEmbedCode(widget)
-                          navigator.clipboard.writeText(code)
-                          alert("Embed code copied to clipboard!")
-                        }}
-                      >
-                        Get Code
-                      </button>
-                      <button className="btn btn-small btn-danger" onClick={() => handleDeleteWidget(widget.id)}>
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+
+        <div className="faq-section">
+          <h2>Frequently Asked Questions</h2>
+          <div className="faq-list">
+            {faqs.map((faq, index) => (
+              <div key={faq.id} className="faq-item">
+                <button className="faq-question" onClick={() => toggleFaq(index)}>
+                  <span>{faq.question}</span>
+                  <span className="faq-toggle">{openFaq === index ? "−" : "+"}</span>
+                </button>
+                {openFaq === index && (
+                  <div className="faq-answer">
+                    <p>{faq.answer}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
-      )}
+
+        <div className="quick-start">
+          <h2>Quick Start Guide</h2>
+          <div className="steps-guide">
+            <div className="step">
+              <div className="step-number">1</div>
+              <div className="step-content">
+                <h3>Browse Feed Catalog</h3>
+                <p>Visit the Widget Catalog to find RSS feeds by category</p>
+              </div>
+            </div>
+            <div className="step">
+              <div className="step-number">2</div>
+              <div className="step-content">
+                <h3>Follow Feeds</h3>
+                <p>Click "Follow" on feeds you want to include in your widgets</p>
+              </div>
+            </div>
+            <div className="step">
+              <div className="step-number">3</div>
+              <div className="step-content">
+                <h3>Create Widget</h3>
+                <p>Use the Create Widgets page to customize your RSS widget</p>
+              </div>
+            </div>
+            <div className="step">
+              <div className="step-number">4</div>
+              <div className="step-content">
+                <h3>Embed on Website</h3>
+                <p>Copy the embed code and paste it on your website</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

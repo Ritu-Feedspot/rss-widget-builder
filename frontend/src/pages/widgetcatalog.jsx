@@ -1,12 +1,15 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useAuth } from "../contexts/AuthContext"
 import CategoryButtons from "../components/catalog/CategoryButtons"
 import FeedList from "../components/catalog/FeedList"
 import FollowingSection from "../components/catalog/FollowingSection"
 import FolderManager from "../components/catalog/FolderManager"
+import AuthModal from "../components/auth/AuthModal"
 
 export default function WidgetCatalog() {
+  const { user, login, loading: authLoading } = useAuth()
   const [selectedCategory, setSelectedCategory] = useState(null)
   const [categories, setCategories] = useState([])
   const [feeds, setFeeds] = useState([])
@@ -14,12 +17,18 @@ export default function WidgetCatalog() {
   const [userFolders, setUserFolders] = useState([])
   const [showFolderManager, setShowFolderManager] = useState(false)
   const [selectedFeed, setSelectedFeed] = useState(null)
+  const [showAuthModal, setShowAuthModal] = useState(false)
 
   useEffect(() => {
     fetchCategories()
-    fetchFollowedFeeds()
-    fetchUserFolders()
   }, [])
+
+  useEffect(() => {
+    if (user && !authLoading) {
+      fetchFollowedFeeds()
+      fetchUserFolders()
+    }
+  }, [user, authLoading])
 
   const fetchCategories = async () => {
     try {
@@ -33,7 +42,9 @@ export default function WidgetCatalog() {
 
   const fetchFeedsByCategory = async (categoryId) => {
     try {
-      const response = await fetch(`http://localhost/rss-widget-builder/backend/api/catalog/getFeedsByCategory.php?category=${categoryId}`)
+      const response = await fetch(
+        `http://localhost/rss-widget-builder/backend/api/catalog/getFeedsByCategory.php?category=${categoryId}`
+      )
       const data = await response.json()
       setFeeds(data)
     } catch (error) {
@@ -43,39 +54,51 @@ export default function WidgetCatalog() {
 
   const fetchFollowedFeeds = async () => {
     try {
-      const response = await fetch("http://localhost/rss-widget-builder/backend/api/feeds/getFollowedFeeds.php")
+      const response = await fetch("http://localhost/rss-widget-builder/backend/api/feeds/getFollowedFeeds.php", {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      })
       const data = await response.json()
-      setFollowedFeeds(data)
+      setFollowedFeeds(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error("Error fetching followed feeds:", error)
+      setFollowedFeeds([])
     }
   }
 
   const fetchUserFolders = async () => {
     try {
-      const response = await fetch("http://localhost/rss-widget-builder/backend/api/feeds/getUserFolders.php")
+      const response = await fetch("http://localhost/rss-widget-builder/backend/api/feeds/getUserFolders.php", {
+        method: "GET",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      })
       const data = await response.json()
-      setUserFolders(data)
+      setUserFolders(Array.isArray(data) ? data : [])
     } catch (error) {
       console.error("Error fetching folders:", error)
     }
   }
 
   const handleCategorySelect = (category) => {
+    if (!user) {
+      setShowAuthModal(true)
+      return
+    }
+
     setSelectedCategory(category)
     fetchFeedsByCategory(category.id)
   }
 
   const handleFollowFeed = (feed) => {
-    if (followedFeeds.length === 0) {
-      // First time following - create default folder
-      setSelectedFeed(feed)
-      setShowFolderManager(true)
-    } else {
-      // Show folder selection
-      setSelectedFeed(feed)
-      setShowFolderManager(true)
+    if (!user) {
+      setShowAuthModal(true)
+      return
     }
+
+    setSelectedFeed(feed)
+    setShowFolderManager(true)
   }
 
   const handleFolderAction = async (action, folderName = null, folderId = null) => {
@@ -83,12 +106,11 @@ export default function WidgetCatalog() {
       if (action === "create") {
         const response = await fetch(`http://localhost/rss-widget-builder/backend/api/folders/createFolder.php`, {
           method: "POST",
+          credentials: "include",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ name: folderName }),
         })
         const newFolder = await response.json()
-
-        // Add feed to new folder
         await followFeedToFolder(selectedFeed.id, newFolder.id)
       } else if (action === "existing") {
         await followFeedToFolder(selectedFeed.id, folderId)
@@ -106,6 +128,7 @@ export default function WidgetCatalog() {
   const followFeedToFolder = async (feedId, folderId) => {
     const response = await fetch(`http://localhost/rss-widget-builder/backend/api/feeds/followFeed.php`, {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ feedId, folderId }),
     })
@@ -124,6 +147,7 @@ export default function WidgetCatalog() {
         selectedCategory={selectedCategory}
         onCategorySelect={handleCategorySelect}
       />
+      
 
       {selectedCategory && (
         <FeedList
@@ -135,7 +159,9 @@ export default function WidgetCatalog() {
       )}
 
       {followedFeeds.length > 0 && (
+        <><br/>
         <FollowingSection followedFeeds={followedFeeds} userFolders={userFolders} onRefresh={fetchFollowedFeeds} />
+        </>
       )}
 
       {showFolderManager && (
@@ -146,6 +172,17 @@ export default function WidgetCatalog() {
           onClose={() => setShowFolderManager(false)}
         />
       )}
+
+
+      <AuthModal
+        isOpen={showAuthModal}
+        onClose={() => setShowAuthModal(false)}
+        onAuthSuccess={(user) => {
+          login(user) // ✅ use the login method from context
+          setShowAuthModal(false)
+        }}
+      />
+
     </div>
   )
 }

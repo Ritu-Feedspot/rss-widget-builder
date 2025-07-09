@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { useAuth } from "../contexts/AuthContext"
 import AuthModal from "./auth/AuthModal"
+import { LogIn, LogOut } from "lucide-react"
 
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -72,7 +73,7 @@ export default function Sidebar() {
 
         <div className="sidebar-footer">
           {isAuthenticated ? (
-            <div className="user-section">
+            <div>
               {!isCollapsed && (
                 <div className="user-info">
                   <div className="user-name">{user.full_name || user.username}</div>
@@ -80,13 +81,18 @@ export default function Sidebar() {
                 </div>
               )}
               <button className="nav-item logout-btn" onClick={logout}>
-                <span className="nav-icon">🚪</span>
+                <span className="nav-icon">
+                  <LogOut size={20} /> {/* 👈 Icon component */}
+                </span>
                 {!isCollapsed && <span className="nav-label">Logout</span>}
               </button>
+
             </div>
           ) : (
             <button className="nav-item login-btn" onClick={() => setShowAuthModal(true)}>
-              <span className="nav-icon">🔑</span>
+              <span className="nav-icon">
+                  <LogIn size={20} /> {/* 👈 Icon component */}
+              </span>
               {!isCollapsed && <span className="nav-label">Login</span>}
             </button>
           )}

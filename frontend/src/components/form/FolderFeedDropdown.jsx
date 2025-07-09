@@ -11,14 +11,22 @@ export default function FolderFeedDropdown({ selected, onSelect }) {
   }, [])
 
   const fetchUserFolders = async () => {
-    try {
-      const response = await fetch("http://localhost/rss-widget-builder/backend/api/feeds/getUserFolders.php")
-      const data = await response.json()
-      setFolders(data)
-    } catch (error) {
-      console.error("Error fetching folders:", error)
+  try {
+    const response = await fetch("http://localhost/rss-widget-builder/backend/api/feeds/getUserFolders.php");
+    const data = await response.json();
+    console.log("Fetched folders:", data);
+
+    if (Array.isArray(data)) {
+      setFolders(data);
+    } else {
+      console.error("Expected array, got:", data);
+      setFolders([]);
     }
+  } catch (error) {
+    console.error("Error fetching folders:", error);
+    setFolders([]);
   }
+};
 
   const getSelectedFolderName = () => {
     if (!selected) return "Select a folder"
@@ -43,18 +51,20 @@ export default function FolderFeedDropdown({ selected, onSelect }) {
           >
             <em>None selected</em>
           </div>
-          {folders.map((folder) => (
-            <div
-              key={folder.id}
-              className="dropdown-item"
-              onClick={() => {
-                onSelect(folder.id.toString())
-                setIsOpen(false)
-              }}
-            >
-              📁 {folder.name} ({folder.feed_count} feeds)
-            </div>
-          ))}
+          {Array.isArray(folders) &&
+  folders.map((folder) => (
+    <div
+      key={folder.id}
+      className="dropdown-item"
+      onClick={() => {
+        onSelect(folder.id.toString())
+        setIsOpen(false)
+      }}
+    >
+      📁 {folder.name} ({folder.feed_count} feeds)
+    </div>
+))}
+
         </div>
       )}
     </div>

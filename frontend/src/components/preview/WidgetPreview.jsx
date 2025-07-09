@@ -132,10 +132,10 @@ export default function WidgetPreview({ config }) {
         return "feed-list"
     }
   }
-
+  
   return (
     <div className="widget-preview">
-      <h4>Preview</h4>
+      <h4>Preview</h4><br></br>
       <div style={widgetStyle} className="widget-container">
         {/* Custom Title */}
         {config.customTitle && config.title && (
