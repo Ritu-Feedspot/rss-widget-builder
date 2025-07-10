@@ -27,16 +27,17 @@ class RSSParser {
                 ]
             ]);
             
-            $xmlContent = file_get_contents($url, false, $context);
+            $xmlContent = @file_get_contents($url, false, $context);
 
             if ($xmlContent === false) {
-            echo json_encode([
-                "error" => "Failed to fetch RSS feed content",
-                "feed_title" => "Error Loading Feed",
-                "items" => []
-            ]);
-            exit;
+            // return [
+            //     "error" => "Failed to fetch RSS feed content",
+            //     "feed_title" => "Error Loading Feed",
+            //     "items" => []
+            // ];
+            throw new Exception("Failed to fetch RSS feed content");
             }
+
 
             // Load RSS feed
             $rss = simplexml_load_string($xmlContent, "SimpleXMLElement", LIBXML_NOCDATA);
@@ -218,7 +219,6 @@ class RSSParser {
         
         return $clean;
     }
-    
     private function parseDate($dateString) {
         if (empty($dateString)) {
             return date('Y-m-d H:i:s');
@@ -272,27 +272,30 @@ class RSSParser {
     }
 }
 
-// Handle API request
-try {
-    $input = json_decode(file_get_contents('php://input'), true);
-    $feedUrl = $input['feedUrl'] ?? $_GET['feedUrl'] ?? null;
-    
-    if (!$feedUrl) {
-        throw new Exception('Feed URL is required');
+// Only handle API request when accessed directly
+if (basename(__FILE__) === basename($_SERVER['SCRIPT_FILENAME'])) {
+    try {
+        $input = json_decode(file_get_contents('php://input'), true);
+        $feedUrl = $input['feedUrl'] ?? $_GET['feedUrl'] ?? null;
+
+        if (!$feedUrl) {
+            throw new Exception('Feed URL is required');
+        }
+
+        $parser = new RSSParser();
+        $feedData = $parser->getFeedData($feedUrl);
+
+        echo json_encode($feedData);
+
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode([
+            'error' => $e->getMessage(),
+            'feed_title' => 'Error Loading Feed',
+            'items' => []
+        ]);
     }
-    
-    $parser = new RSSParser();
-    $feedData = $parser->getFeedData($feedUrl);
-    
-    echo json_encode($feedData);
-    
-} catch (Exception $e) {
-    http_response_code(500);
-    echo json_encode([
-        'error' => $e->getMessage(),
-        'feed_title' => 'Error Loading Feed',
-        'items' => []
-    ]);
 }
+
 
 ?>

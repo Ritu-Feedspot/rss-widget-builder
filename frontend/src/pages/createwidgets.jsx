@@ -168,9 +168,10 @@ export default function CreateWidgets() {
             </ol>
           </div>
         </div>
-
     </div>
+
       <div className="widget-builder">
+        <div className="form-column">
         <div className="form-section">
           {/* <CategorySearchBar onSelect={handleFeedSelect} />
 
@@ -210,7 +211,9 @@ export default function CreateWidgets() {
             </button>
           </div>
         </div>
+        </div>
 
+        <div className="preview-column">
         <div className="preview-section">
           <div className="preview-sticky">
             <input
@@ -222,6 +225,7 @@ export default function CreateWidgets() {
             />
             <WidgetPreview config={widgetConfig} />
           </div>
+        </div>
         </div>
       </div>
     </div>

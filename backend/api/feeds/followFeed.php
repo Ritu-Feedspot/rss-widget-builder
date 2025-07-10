@@ -37,8 +37,9 @@ try {
     }
 
     // ✅ Check if feed already followed by user in this folder
-    $checkSql = "SELECT id FROM user_followed_feeds WHERE feed_id = ? AND folder_id = ?";
-    $existing = $db->fetchOne($checkSql, [$feedId, $folderId]);
+    $checkSql = "SELECT id FROM user_followed_feeds WHERE feed_id = ? AND folder_id = ? AND user_id = ?";
+    $existing = $db->fetchOne($checkSql, [$feedId, $folderId, $userId]);
+
 
     if ($existing) {
         echo json_encode([
@@ -49,8 +50,8 @@ try {
     }
 
     // ✅ Insert follow record
-    $insertSql = "INSERT INTO user_followed_feeds (feed_id, folder_id, created_at) VALUES (?, ?, NOW())";
-    $id = $db->insert($insertSql, [$feedId, $folderId]);
+    $insertSql = "INSERT INTO user_followed_feeds (feed_id, folder_id, user_id, created_at) VALUES (?, ?, ?, NOW())";
+    $id = $db->insert($insertSql, [$feedId, $folderId, $userId]);
 
     echo json_encode([
         'success' => true,

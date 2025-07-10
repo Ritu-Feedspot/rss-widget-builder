@@ -1,5 +1,8 @@
 <?php
 // CORS and content headers
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 header('Access-Control-Allow-Origin: http://localhost:3000');
 header('Access-Control-Allow-Methods: GET, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
@@ -68,6 +71,7 @@ try {
     $folderTitle = 'Mixed Feed';
 
     foreach ($feeds as $feed) {
+    try {
         $feedData = $parser->getFeedData($feed['rss_url']);
 
         if (!isset($feedData['error']) && !empty($feedData['items'])) {
@@ -76,15 +80,21 @@ try {
                 $allItems[] = $item;
             }
         }
+    } catch (Exception $e) {
+        // Optionally log the error
+        error_log("Skipping feed: {$feed['rss_url']} — " . $e->getMessage());
+        continue;
     }
+}
+
 
     // Sort items by date descending
     usort($allItems, function ($a, $b) {
         return strtotime($b['pub_date']) - strtotime($a['pub_date']);
     });
 
-    // Limit to 20
-    $allItems = array_slice($allItems, 0, 20);
+    // // Limit to 20
+    // $allItems = array_slice($allItems, 0, 20);
 
     echo json_encode([
         'feed_title' => $folderTitle,

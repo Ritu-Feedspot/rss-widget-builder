@@ -15,56 +15,61 @@ export default function WidgetPreview({ config }) {
   }, [config.feedUrl, config.selectedFolder])
 
   const fetchFeedData = async () => {
-    setLoading(true)
-    setError(null)
+  setLoading(true)
+  setError(null)
 
-    try {
-      let url = ""
+  try {
+    let url = ""
 
-      if (config.selectedFolder && config.selectedFolder !== "") {
-        // Get folder feeds
-        url = `http://localhost/rss-widget-builder/backend/api/feeds/getFolderFeeds.php?folderId=${encodeURIComponent(config.selectedFolder)}`
-      } else if (config.feedUrl) {
-        // Parse single RSS feed
-        url = `http://localhost/rss-widget-builder/backend/api/rss/parseRSS.php`
-      } else {
-        setFeedData(null)
-        setLoading(false)
-        return
-      }
-
-      const response = await fetch(url, {
-        method: config.feedUrl && !config.selectedFolder ? "POST" : "GET",
-        headers:
-          config.feedUrl && !config.selectedFolder
-            ? {
-                "Content-Type": "application/json",
-              }
-            : {},
-        body:
-          config.feedUrl && !config.selectedFolder
-            ? JSON.stringify({
-                feedUrl: config.feedUrl,
-              })
-            : undefined,
-      })
-
-      const data = await response.json()
-
-      if (data.error) {
-        setError(data.error)
-        setFeedData(null)
-      } else {
-        setFeedData(data)
-      }
-    } catch (err) {
-      console.error("Error fetching feed data:", err)
-      setError("Failed to load feed data")
+    if (config.selectedFolder && config.selectedFolder !== "") {
+      url = `http://localhost/rss-widget-builder/backend/api/feeds/getFolderFeeds.php?folderId=${encodeURIComponent(config.selectedFolder)}`
+    } else if (config.feedUrl) {
+      url = `http://localhost/rss-widget-builder/backend/api/rss/parseRSS.php`
+    } else {
       setFeedData(null)
-    } finally {
       setLoading(false)
+      return
     }
+
+    const response = await fetch(url, {
+      method: config.feedUrl && !config.selectedFolder ? "POST" : "GET",
+      headers:
+        config.feedUrl && !config.selectedFolder
+          ? { "Content-Type": "application/json" }
+          : {},
+      body:
+        config.feedUrl && !config.selectedFolder
+          ? JSON.stringify({ feedUrl: config.feedUrl })
+          : undefined,
+      credentials: "include",
+    })
+
+    const text = await response.text();
+
+    let data;
+    try {
+      data = JSON.parse(text);
+    } catch (err) {
+      console.error("Failed to parse JSON:", text);
+      throw new Error("Invalid JSON returned by backend");
+    }
+
+
+    if (data.error) {
+      setError(data.error)
+      setFeedData(null)
+    } else {
+      setFeedData(data)
+    }
+  } catch (err) {
+    console.error("Error fetching feed data:", err)
+    setError("Failed to load feed data")
+    setFeedData(null)
+  } finally {
+    setLoading(false)
   }
+}
+
 
   const formatDate = (dateString, format = "long") => {
     if (!dateString) return ""
@@ -94,7 +99,7 @@ export default function WidgetPreview({ config }) {
 
   const getDisplayItems = () => {
     if (!feedData || !feedData.items) return []
-    return feedData.items.slice(0, config.postCount || 5)
+    return config.postCount ? feedData.items.slice(0, config.postCount) : feedData.items
   }
 
   const widgetStyle = {
@@ -134,7 +139,7 @@ export default function WidgetPreview({ config }) {
   }
   
   return (
-    <div className="widget-preview">
+    <div className="widget-preview" >
       <h4>Preview</h4><br></br>
       <div style={widgetStyle} className="widget-container">
         {/* Custom Title */}
