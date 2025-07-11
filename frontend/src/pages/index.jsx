@@ -1,4 +1,28 @@
+"use client"
+
+import { useState } from "react"
+import { useAuth } from "../contexts/AuthContext"
+import AuthModal from "../components/auth/AuthModal"
+import Link from "next/link"
+
 export default function Home() {
+  const { isAuthenticated, login } = useAuth()
+  const [showAuthModal, setShowAuthModal] = useState(false)
+
+  const handleCreateWidgetClick = (e) => {
+    if (!isAuthenticated) {
+      e.preventDefault() 
+      setShowAuthModal(true)
+    }
+  }
+
+  const handleAuthSuccess = (userData) => {
+    login(userData)
+    setShowAuthModal(false)
+    // Optionally redirect after successful login, e.g., to /createwidgets
+    window.location.href = "/createwidgets"
+  }
+
   return (
     <div className="home-page">
       <div className="welcome-section">
@@ -6,12 +30,12 @@ export default function Home() {
         <p>Create and embed RSS widgets on your website</p>
 
         <div className="quick-actions">
-          <a href="/createwidgets" className="btn btn-primary">
+          <Link href="/createwidgets" className="btn btn-primary" onClick={handleCreateWidgetClick}>
             Create Your First Widget
-          </a>
-          <a href="/widgetcatalog" className="btn btn-secondary">
+          </Link>
+          <Link href="/widgetcatalog" className="btn btn-secondary">
             Browse Feed Catalog
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -29,6 +53,8 @@ export default function Home() {
           <p>Get embed code and paste on any website</p>
         </div>
       </div>
+
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} onAuthSuccess={handleAuthSuccess} />
     </div>
-  );
+  )
 }

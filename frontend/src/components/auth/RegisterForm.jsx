@@ -14,7 +14,6 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
-  // Get API base URL from environment or use default
   const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost/rss-widget-builder/backend/api"
 
   const handleSubmit = async (e) => {

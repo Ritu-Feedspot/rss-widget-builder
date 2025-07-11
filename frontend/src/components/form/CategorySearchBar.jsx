@@ -84,7 +84,7 @@ export default function CategorySearchBar({ onSelect }) {
       await fetchFeedsByCategory(result.id)
       setShowDropdown(false)
 
-      // Don't select a feed URL yet, let user choose specific feed
+      // Don't select a feed URL yet first let user choose specific feed
       onSelect("")
     } else if (result.type === "feed") {
       setSearchTerm(result.name)

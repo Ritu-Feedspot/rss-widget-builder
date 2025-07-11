@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { useAuth } from "../contexts/AuthContext"
 import AuthModal from "./auth/AuthModal"
-import { LogIn, LogOut } from "lucide-react"
+import { LogIn, LogOut, HomeIcon, ListPlusIcon, BookCopyIcon, CircleQuestionMark, Lightbulb, TablePropertiesIcon, Users2 } from "lucide-react"
 
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
@@ -12,13 +12,13 @@ export default function Sidebar() {
   const { user, loading, login, logout, isAuthenticated } = useAuth()
 
   const menuItems = [
-    { href: "/", label: "Feedspot Home", icon: "🏠" },
-    { href: "/createwidgets", label: "Create Widgets", icon: "➕", requireAuth: true },
-    { href: "/mywidgets", label: "My Widgets", icon: "📊", requireAuth: true },
-    { href: "/widgetcatalog", label: "Widget Catalog", icon: "📚" },
-    { href: "/support", label: "Support", icon: "❓" },
-    { href: "/widgetexamples", label: "Widget Examples", icon: "🎨" },
-    { href: "/customers", label: "Customers", icon: "👥" },
+    { href: "/", label: "Feedspot Home", icon: HomeIcon },
+    { href: "/createwidgets", label: "Create Widgets", icon: ListPlusIcon, requireAuth: true },
+    { href: "/mywidgets", label: "My Widgets", icon: TablePropertiesIcon, requireAuth: true },
+    { href: "/widgetcatalog", label: "Widget Catalog", icon: BookCopyIcon },
+    { href: "/support", label: "Support", icon: CircleQuestionMark },
+    { href: "/widgetexamples", label: "Widget Examples", icon: Lightbulb },
+    { href: "/customers", label: "Customers", icon: Users2 },
   ]
 
   const handleAuthSuccess = (userData) => {
@@ -58,18 +58,24 @@ export default function Sidebar() {
         </div>
 
         <nav className="sidebar-nav">
-          {menuItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="nav-item"
-              onClick={(e) => handleProtectedRoute(e, item.requireAuth)}
-            >
-              <span className="nav-icon">{item.icon}</span>
-              {!isCollapsed && <span className="nav-label">{item.label}</span>}
-            </Link>
-          ))}
+          {menuItems.map((item) => {
+            const Icon = item.icon; // extract component reference
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="nav-item"
+                onClick={(e) => handleProtectedRoute(e, item.requireAuth)}
+              >
+                <span className="nav-icon">
+                  <Icon size={20} /> {/* Or customize size/color if needed */}
+                </span>
+                {!isCollapsed && <span className="nav-label">{item.label}</span>}
+              </Link>
+            );
+          })}
         </nav>
+
 
         <div className="sidebar-footer">
           {isAuthenticated ? (

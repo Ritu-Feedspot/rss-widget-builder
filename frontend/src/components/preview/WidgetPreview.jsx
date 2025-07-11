@@ -7,7 +7,6 @@ export default function WidgetPreview({ config }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
 
-  // Fetch RSS data when feed URL or folder changes
   useEffect(() => {
     if (config.feedUrl || config.selectedFolder) {
       fetchFeedData()
@@ -15,61 +14,53 @@ export default function WidgetPreview({ config }) {
   }, [config.feedUrl, config.selectedFolder])
 
   const fetchFeedData = async () => {
-  setLoading(true)
-  setError(null)
+    setLoading(true)
+    setError(null)
 
-  try {
-    let url = ""
-
-    if (config.selectedFolder && config.selectedFolder !== "") {
-      url = `http://localhost/rss-widget-builder/backend/api/feeds/getFolderFeeds.php?folderId=${encodeURIComponent(config.selectedFolder)}`
-    } else if (config.feedUrl) {
-      url = `http://localhost/rss-widget-builder/backend/api/rss/parseRSS.php`
-    } else {
-      setFeedData(null)
-      setLoading(false)
-      return
-    }
-
-    const response = await fetch(url, {
-      method: config.feedUrl && !config.selectedFolder ? "POST" : "GET",
-      headers:
-        config.feedUrl && !config.selectedFolder
-          ? { "Content-Type": "application/json" }
-          : {},
-      body:
-        config.feedUrl && !config.selectedFolder
-          ? JSON.stringify({ feedUrl: config.feedUrl })
-          : undefined,
-      credentials: "include",
-    })
-
-    const text = await response.text();
-
-    let data;
     try {
-      data = JSON.parse(text);
+      let url = ""
+
+      if (config.selectedFolder && config.selectedFolder !== "") {
+        url = `http://localhost/rss-widget-builder/backend/api/feeds/getFolderFeeds.php?folderId=${encodeURIComponent(config.selectedFolder)}`
+      } else if (config.feedUrl) {
+        url = `http://localhost/rss-widget-builder/backend/api/rss/parseRSS.php`
+      } else {
+        setFeedData(null)
+        setLoading(false)
+        return
+      }
+
+      const response = await fetch(url, {
+        method: config.feedUrl && !config.selectedFolder ? "POST" : "GET",
+        headers: config.feedUrl && !config.selectedFolder ? { "Content-Type": "application/json" } : {},
+        body: config.feedUrl && !config.selectedFolder ? JSON.stringify({ feedUrl: config.feedUrl }) : undefined,
+        credentials: "include",
+      })
+
+      const text = await response.text()
+
+      let data
+      try {
+        data = JSON.parse(text)
+      } catch (err) {
+        console.error("Failed to parse JSON:", text)
+        throw new Error("Invalid JSON returned by backend")
+      }
+
+      if (data.error) {
+        setError(data.error)
+        setFeedData(null)
+      } else {
+        setFeedData(data)
+      }
     } catch (err) {
-      console.error("Failed to parse JSON:", text);
-      throw new Error("Invalid JSON returned by backend");
-    }
-
-
-    if (data.error) {
-      setError(data.error)
+      console.error("Error fetching feed data:", err)
+      setError("Failed to load feed data")
       setFeedData(null)
-    } else {
-      setFeedData(data)
+    } finally {
+      setLoading(false)
     }
-  } catch (err) {
-    console.error("Error fetching feed data:", err)
-    setError("Failed to load feed data")
-    setFeedData(null)
-  } finally {
-    setLoading(false)
   }
-}
-
 
   const formatDate = (dateString, format = "long") => {
     if (!dateString) return ""
@@ -109,7 +100,7 @@ export default function WidgetPreview({ config }) {
     borderRadius: config.cornerStyle === "rounded" ? "8px" : "0",
     fontFamily: config.fontStyle || "Arial, sans-serif",
     backgroundColor: config.contentBgColor || "#ffffff",
-    overflow: "hidden",
+    overflow: "hidden", 
     textAlign: config.textAlign || "left",
   }
 
@@ -123,30 +114,42 @@ export default function WidgetPreview({ config }) {
     textAlign: config.textAlign || "left",
   }
 
-  const getViewTypeClass = () => {
-    switch (config.viewType) {
-      case "compact":
-        return "feed-compact"
-      case "card":
-        return "feed-card"
-      case "grid":
-        return "feed-grid"
-      case "magazine":
-        return "feed-magazine"
-      default:
-        return "feed-list"
-    }
+  // include layoutType and viewType
+  const getFeedItemClasses = () => {
+    return `feed-item feed-view-${config.viewType} feed-layout-${config.layoutType}`
   }
-  
+
+  // Determine the css container class for feed-content based on view and layout
+  const getFeedContentContainerClass = () => {
+    if (config.viewType === "grid" && config.layoutType === "grid1") {
+      return "grid-layout1-container"
+    }
+    if (config.viewType === "grid" && config.layoutType === "grid2") {
+      return "grid-layout2-container"
+    }
+    if (config.viewType === "matrixcard" && config.layoutType === "matrixcard1") {
+      return "matrixcard-layout1-container"
+    }
+    if (config.viewType === "matrixcard" && config.layoutType === "matrixcard2") {
+      return "matrixcard-layout2-container"
+    }
+    return ""
+  }
+
   return (
-    <div className="widget-preview" >
-      <h4>Preview</h4><br></br>
+    <div className="widget-preview">
+      <h4>Preview</h4>
+      <br></br>
       <div style={widgetStyle} className="widget-container">
         {/* Custom Title */}
         {config.customTitle && config.title && (
           <h3 style={titleStyle}>
             {config.titleLink ? (
-              <a href={config.titleLink} style={{ color: "inherit", textDecoration: "none" }}>
+              <a
+                href={config.titleLink}
+                target={config.openLinks === "same" ? "_self" : "_blank"}
+                style={{ color: "inherit", textDecoration: "none" }}
+              >
                 {config.title}
               </a>
             ) : (
@@ -155,32 +158,36 @@ export default function WidgetPreview({ config }) {
           </h3>
         )}
 
-        {/* Feed Title (if not custom) */}
+        {/* Feed Title if not custom not set*/}
         {!config.customTitle && feedData && feedData.feed_title && <h3 style={titleStyle}>{feedData.feed_title}</h3>}
 
-        <div className="feed-content">
+        <div
+          className={`feed-content ${getFeedContentContainerClass()}`}
+          style={{ overflowY: "auto", height: "calc(100% - 40px)" }}
+        >
+          {" "}
+          {/* Added overflowY and height */}
           {loading && (
             <div className="feed-loading">
               <p>Loading feed data...</p>
             </div>
           )}
-
           {error && (
             <div className="feed-error">
               <p>Error: {error}</p>
             </div>
           )}
-
           {!loading && !error && getDisplayItems().length === 0 && (
             <div className="feed-empty">
               <p>No feed data available. Please enter a valid RSS feed URL or select a folder.</p>
             </div>
           )}
-
           {!loading &&
             !error &&
             getDisplayItems().map((item, index) => (
-              <div key={index} className={`feed-item ${getViewTypeClass()}`}>
+              <div key={index} className={getFeedItemClasses()}>
+                {" "}
+                {/* Updated class */}
                 {/* Item Image */}
                 {item.image && (
                   <div className="feed-image">
@@ -193,7 +200,6 @@ export default function WidgetPreview({ config }) {
                     />
                   </div>
                 )}
-
                 <div className="feed-text">
                   {/* Item Title */}
                   {config.showTitle !== false && item.title && (

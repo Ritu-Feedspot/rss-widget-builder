@@ -1,37 +1,19 @@
 "use client"
 
 import { useState } from "react"
-// import CategorySearchBar from "../components/form/CategorySearchBar"
-// import FolderFeedDropdown from "../components/form/FolderFeedDropdown"
 import FeedSourceSection from "@/components/form/FeedSourceSection"
 import GeneralSection from "../components/form/GeneralSection"
 import FeedTitleSection from "../components/form/FeedTitleSection"
 import FeedContentSection from "../components/form/FeedContentSection"
 import FollowingViewsSection from "../components/form/FollowingViewsSection"
 import WidgetPreview from "../components/preview/WidgetPreview"
-
-
+import { WIDGET_DEFAULTS } from "@/utils/constants" // Import defaults
 
 export default function CreateWidgets() {
   const [widgetConfig, setWidgetConfig] = useState({
+    ...WIDGET_DEFAULTS, // Use defaults from constants
     feedUrl: "",
     selectedFolder: "",
-    width: 350,
-    height: 400,
-    responsive: true,
-    title: "",
-    titleSize: 16,
-    titleColor: "#000000",
-    titleBold: false,
-    showAuthor: true,
-    showDate: true,
-    postCount: 5,
-    viewType: "list",
-    fontStyle: "Arial",
-    textAlign: "left",
-    showBorder: false,
-    borderColor: "#dbdbdb",
-    cornerStyle: "square",
     customTitle: false,
     titleLink: "",
     titleBgColor: "#ffffff",
@@ -111,24 +93,9 @@ export default function CreateWidgets() {
 
   const handleReset = () => {
     setWidgetConfig({
+      ...WIDGET_DEFAULTS, // Reset to defaults
       feedUrl: "",
       selectedFolder: "",
-      width: 350,
-      height: 400,
-      responsive: true,
-      title: "",
-      titleSize: 16,
-      titleColor: "#000000",
-      titleBold: false,
-      showAuthor: true,
-      showDate: true,
-      postCount: 5,
-      viewType: "list",
-      fontStyle: "Arial",
-      textAlign: "left",
-      showBorder: false,
-      borderColor: "#dbdbdb",
-      cornerStyle: "square",
       customTitle: false,
       titleLink: "",
       titleBgColor: "#ffffff",
@@ -168,64 +135,54 @@ export default function CreateWidgets() {
             </ol>
           </div>
         </div>
-    </div>
+      </div>
 
       <div className="widget-builder">
         <div className="form-column">
-        <div className="form-section">
-          {/* <CategorySearchBar onSelect={handleFeedSelect} />
-
           <div className="form-section">
-            <h3>RSS Feed URL</h3>
-            <input
-              type="text"
-              placeholder="Enter Feed URL (e.g., https://techcrunch.com/feed/)"
-              value={widgetConfig.feedUrl}
-              onChange={(e) => handleFeedSelect(e.target.value)}
-              className="feed-url-input"
+            <FeedSourceSection
+              feedUrl={widgetConfig.feedUrl}
+              selectedFolder={widgetConfig.selectedFolder}
+              onFeedSelect={handleFeedSelect}
+              onFolderSelect={handleFolderSelect}
             />
-            <p>OR Select your Feedspot account or Folder Feed URL</p>
-            <FolderFeedDropdown selected={widgetConfig.selectedFolder} onSelect={handleFolderSelect} />
-          </div> */}
-          <FeedSourceSection
-            feedUrl={widgetConfig.feedUrl}
-            selectedFolder={widgetConfig.selectedFolder}
-            onFeedSelect={handleFeedSelect}
-            onFolderSelect={handleFolderSelect}
-          />
-      
-          <FollowingViewsSection viewType={widgetConfig.viewType} onChange={(type) => updateConfig("viewType", type)} />
 
-          <GeneralSection config={widgetConfig} onChange={updateConfig} />
+            <FollowingViewsSection
+              viewType={widgetConfig.viewType}
+              layoutType={widgetConfig.layoutType} // Pass layoutType
+              onChange={updateConfig} // Pass updateConfig directly
+            />
 
-          <FeedTitleSection config={widgetConfig} onChange={updateConfig} />
+            <GeneralSection config={widgetConfig} onChange={updateConfig} />
 
-          <FeedContentSection config={widgetConfig} onChange={updateConfig} />
+            <FeedTitleSection config={widgetConfig} onChange={updateConfig} />
 
-          <div className="form-actions">
-            <button onClick={handleSaveWidget} className="btn btn-primary">
-              Save & Get Code
-            </button>
-            <button onClick={handleReset} className="btn btn-secondary">
-              Reset
-            </button>
+            <FeedContentSection config={widgetConfig} onChange={updateConfig} />
+
+            <div className="form-actions">
+              <button onClick={handleSaveWidget} className="btn btn-primary">
+                Save & Get Code
+              </button>
+              <button onClick={handleReset} className="btn btn-secondary">
+                Reset
+              </button>
+            </div>
           </div>
-        </div>
         </div>
 
         <div className="preview-column">
-        <div className="preview-section">
-          <div className="preview-sticky">
-            <input
-              type="text"
-              placeholder="Enter Widget Name"
-              className="widget-name-input"
-              value={widgetName}
-              onChange={(e) => setWidgetName(e.target.value)}
-            />
-            <WidgetPreview config={widgetConfig} />
+          <div className="preview-section">
+            <div className="preview-sticky">
+              <input
+                type="text"
+                placeholder="Enter Widget Name"
+                className="widget-name-input"
+                value={widgetName}
+                onChange={(e) => setWidgetName(e.target.value)}
+              />
+              <WidgetPreview config={widgetConfig} />
+            </div>
           </div>
-        </div>
         </div>
       </div>
     </div>
