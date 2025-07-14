@@ -11,7 +11,7 @@ export default function LoginForm({ onSuccess, onSwitchToRegister }) {
   const [error, setError] = useState("")
 
   // Get API base URL from environment or use default
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost/rss-widget-builder/backend/api"
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081/rss-widget-builder/backend/api"
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -98,12 +98,6 @@ export default function LoginForm({ onSuccess, onSwitchToRegister }) {
           Register here
         </button>
       </p>
-
-      {/* <div style={{ marginTop: "20px", fontSize: "12px", color: "#666" }}>
-        <p>Debug Info:</p>
-        <p>API URL: {API_BASE_URL}</p>
-        <p>Login URL: {API_BASE_URL}/auth/login.php</p>
-      </div> */}
     </div>
   )
 }

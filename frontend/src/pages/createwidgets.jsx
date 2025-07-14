@@ -64,7 +64,7 @@ export default function CreateWidgets() {
       return
     }
     try {
-      const response = await fetch("http://localhost/rss-widget-builder/backend/api/widgets/create.php", {
+      const response = await fetch("http://localhost:8081/rss-widget-builder/backend/api/widgets/create.php", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

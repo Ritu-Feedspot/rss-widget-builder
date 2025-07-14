@@ -12,7 +12,7 @@ export default function FolderFeedDropdown({ selected, onSelect }) {
 
   const fetchUserFolders = async () => {
   try {
-    const response = await fetch("http://localhost/rss-widget-builder/backend/api/feeds/getUserFolders.php", {
+    const response = await fetch("http://localhost:8081/rss-widget-builder/backend/api/feeds/getUserFolders.php", {
       credentials: "include",
     });
     const data = await response.json();

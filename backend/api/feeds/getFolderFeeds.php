@@ -37,7 +37,7 @@ try {
         throw new Exception('Folder ID is required');
     }
 
-    // ✅ Ensure folder belongs to the logged-in user
+    // Ensure folder belongs to the logged-in user
     $folderCheck = $db->fetchOne("SELECT id FROM folders WHERE id = ? AND user_id = ?", [$folderId, $userId]);
     if (!$folderCheck) {
         http_response_code(403);
@@ -49,7 +49,7 @@ try {
         exit;
     }
 
-    // ✅ Get all feeds in this folder for the user
+    // Get all feeds in this folder for the user
     $sql = "SELECT f.rss_url, f.title AS feed_title
             FROM feeds f
             JOIN user_followed_feeds uff ON f.id = uff.feed_id

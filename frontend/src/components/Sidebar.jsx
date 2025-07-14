@@ -4,11 +4,13 @@ import { useState } from "react"
 import Link from "next/link"
 import { useAuth } from "../contexts/AuthContext"
 import AuthModal from "./auth/AuthModal"
+import ConfirmModal from "./auth/ConfirmModal"
 import { LogIn, LogOut, HomeIcon, ListPlusIcon, BookCopyIcon, CircleQuestionMark, Lightbulb, TablePropertiesIcon, Users2 } from "lucide-react"
 
 export default function Sidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false)
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [showLogoutModal, setShowLogoutModal] = useState(false)
   const { user, loading, login, logout, isAuthenticated } = useAuth()
 
   const menuItems = [
@@ -31,6 +33,11 @@ export default function Sidebar() {
       e.preventDefault()
       setShowAuthModal(true)
     }
+  }
+  
+  const handleLogout = () => {
+    logout()
+    setShowLogoutModal(false)
   }
 
   if (loading) {
@@ -59,7 +66,7 @@ export default function Sidebar() {
 
         <nav className="sidebar-nav">
           {menuItems.map((item) => {
-            const Icon = item.icon; // extract component reference
+            const Icon = item.icon; 
             return (
               <Link
                 key={item.href}
@@ -68,7 +75,7 @@ export default function Sidebar() {
                 onClick={(e) => handleProtectedRoute(e, item.requireAuth)}
               >
                 <span className="nav-icon">
-                  <Icon size={20} /> {/* Or customize size/color if needed */}
+                  <Icon size={20} /> 
                 </span>
                 {!isCollapsed && <span className="nav-label">{item.label}</span>}
               </Link>
@@ -86,18 +93,19 @@ export default function Sidebar() {
                   <div className="user-email">{user.email}</div>
                 </div>
               )}
-              <button className="nav-item logout-btn" onClick={logout}>
+              <button className="nav-item logout-btn" onClick={() => setShowLogoutModal(true)}>
                 <span className="nav-icon">
-                  <LogOut size={20} /> {/* 👈 Icon component */}
+                  <LogOut size={20}/> 
                 </span>
                 {!isCollapsed && <span className="nav-label">Logout</span>}
               </button>
-
+              {/* Logout Confirmation Modal */}
+              
             </div>
           ) : (
             <button className="nav-item login-btn" onClick={() => setShowAuthModal(true)}>
               <span className="nav-icon">
-                  <LogIn size={20} /> {/* 👈 Icon component */}
+                  <LogIn size={20} /> 
               </span>
               {!isCollapsed && <span className="nav-label">Login</span>}
             </button>
@@ -106,6 +114,7 @@ export default function Sidebar() {
       </div>
 
       <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} onAuthSuccess={handleAuthSuccess} />
+      <ConfirmModal isOpen={showLogoutModal} message="Are you sure you want to logout?" onConfirm={handleLogout} onCancel={() => setShowLogoutModal(false)}/>
     </>
   )
 }

@@ -9,7 +9,7 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   // Get API base URL from environment or use default
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost/rss-widget-builder/backend/api"
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081/rss-widget-builder/backend/api"
 
   useEffect(() => {
     checkAuthStatus()
@@ -17,9 +17,9 @@ export function AuthProvider({ children }) {
 
   const checkAuthStatus = async () => {
     try {
-      console.log("Checking auth status at:", `http://localhost/rss-widget-builder/backend/api/auth/me.php`)
+      console.log("Checking auth status at:", `http://localhost:8081/rss-widget-builder/backend/api/auth/me.php`)
 
-      const response = await fetch(`http://localhost/rss-widget-builder/backend/api/auth/me.php`, {
+      const response = await fetch(`http://localhost:8081/rss-widget-builder/backend/api/auth/me.php`, {
         method: "GET",
         credentials: "include",
         headers: {
@@ -57,7 +57,7 @@ export function AuthProvider({ children }) {
 
   const logout = async () => {
     try {
-      await fetch(`http://localhost/rss-widget-builder/backend/api/auth/logout.php`, {
+      await fetch(`http://localhost:8081/rss-widget-builder/backend/api/auth/logout.php`, {
         method: "POST",
         credentials: "include",
         headers: {

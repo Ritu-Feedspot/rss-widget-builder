@@ -14,7 +14,7 @@ export default function RegisterForm({ onSuccess, onSwitchToLogin }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState("")
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost/rss-widget-builder/backend/api"
+  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8081/rss-widget-builder/backend/api"
 
   const handleSubmit = async (e) => {
     e.preventDefault()

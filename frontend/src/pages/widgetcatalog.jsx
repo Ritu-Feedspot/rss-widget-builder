@@ -32,7 +32,7 @@ export default function WidgetCatalog() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch("http://localhost/rss-widget-builder/backend/api/catalog/getCategories.php")
+      const response = await fetch("http://localhost:8081/rss-widget-builder/backend/api/catalog/getCategories.php")
       const data = await response.json()
       setCategories(data)
     } catch (error) {
@@ -43,7 +43,7 @@ export default function WidgetCatalog() {
   const fetchFeedsByCategory = async (categoryId) => {
     try {
       const response = await fetch(
-        `http://localhost/rss-widget-builder/backend/api/catalog/getFeedsByCategory.php?category=${categoryId}`
+        `http://localhost:8081/rss-widget-builder/backend/api/catalog/getFeedsByCategory.php?category=${categoryId}`
       )
       const data = await response.json()
       setFeeds(data)
@@ -54,7 +54,7 @@ export default function WidgetCatalog() {
 
   const fetchFollowedFeeds = async () => {
     try {
-      const response = await fetch("http://localhost/rss-widget-builder/backend/api/feeds/getFollowedFeeds.php", {
+      const response = await fetch("http://localhost:8081/rss-widget-builder/backend/api/feeds/getFollowedFeeds.php", {
         method: "GET",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -69,7 +69,7 @@ export default function WidgetCatalog() {
 
   const fetchUserFolders = async () => {
     try {
-      const response = await fetch("http://localhost/rss-widget-builder/backend/api/feeds/getUserFolders.php", {
+      const response = await fetch("http://localhost:8081/rss-widget-builder/backend/api/feeds/getUserFolders.php", {
         method: "GET",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
@@ -104,7 +104,7 @@ export default function WidgetCatalog() {
   const handleFolderAction = async (action, folderName = null, folderId = null) => {
     try {
       if (action === "create") {
-        const response = await fetch(`http://localhost/rss-widget-builder/backend/api/folders/createFolder.php`, {
+        const response = await fetch(`http://localhost:8081/rss-widget-builder/backend/api/folders/createFolder.php`, {
           method: "POST",
           credentials: "include",
           headers: { "Content-Type": "application/json" },
@@ -126,7 +126,7 @@ export default function WidgetCatalog() {
   }
 
   const followFeedToFolder = async (feedId, folderId) => {
-    const response = await fetch(`http://localhost/rss-widget-builder/backend/api/feeds/followFeed.php`, {
+    const response = await fetch(`http://localhost:8081/rss-widget-builder/backend/api/feeds/followFeed.php`, {
       method: "POST",
       credentials: "include",
       headers: { "Content-Type": "application/json" },

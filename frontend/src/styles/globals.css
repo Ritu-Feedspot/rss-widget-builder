@@ -1955,6 +1955,13 @@ body {
   margin-bottom: 25px;
 }
 
+.modal-buttons {
+  display: flex;
+  justify-content: center; /* or space-between */
+  gap: 10px;               /* ✅ this creates space between buttons */
+  margin-top: 15px;
+}
+
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1966,6 +1973,7 @@ body {
 }
 
 .form-group label {
+  text-align:justify;
   display: block;
   margin-bottom: 5px;
   font-weight: 500;

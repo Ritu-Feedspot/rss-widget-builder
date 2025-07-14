@@ -25,7 +25,7 @@ export default function CategorySearchBar({ onSelect }) {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch("http://localhost/rss-widget-builder/backend/api/catalog/getCategories.php")
+      const response = await fetch("http://localhost:8081/rss-widget-builder/backend/api/catalog/getCategories.php")
       const data = await response.json()
       setCategories(data)
     } catch (error) {
@@ -35,7 +35,7 @@ export default function CategorySearchBar({ onSelect }) {
 
   const fetchFeedsByCategory = async (categoryId) => {
     try {
-      const response = await fetch(`http://localhost/rss-widget-builder/backend/api/catalog/getFeedsByCategory.php?category=${categoryId}`)
+      const response = await fetch(`http://localhost:8081/rss-widget-builder/backend/api/catalog/getFeedsByCategory.php?category=${categoryId}`)
       const data = await response.json()
       setFeeds(data)
     } catch (error) {

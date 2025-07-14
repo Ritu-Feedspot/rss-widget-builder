@@ -12,7 +12,7 @@ export default function Support() {
 
   const fetchFAQs = async () => {
     try {
-      const response = await fetch("http://localhost/rss-widget-builder/backend/api/support/getFAQs.php")
+      const response = await fetch("http://localhost:8081/rss-widget-builder/backend/api/support/getFAQs.php")
       const data = await response.json()
       setFaqs(data)
     } catch (error) {

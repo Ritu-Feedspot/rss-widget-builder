@@ -18,7 +18,7 @@ export default function MyWidgets() {
 
   const fetchWidgets = async () => {
     try {
-      const response = await fetch("http://localhost/rss-widget-builder/backend/api/widgets/read.php", {
+      const response = await fetch("http://localhost:8081/rss-widget-builder/backend/api/widgets/read.php", {
         credentials: "include", // ✅ Include session cookies
       })
 
@@ -47,7 +47,7 @@ export default function MyWidgets() {
   const handleDeleteWidget = async (widgetId) => {
     if (confirm("Are you sure you want to delete this widget?")) {
       try {
-        await fetch("http://localhost/rss-widget-builder/backend/api/widgets/delete.php", {
+        await fetch("http://localhost:8081/rss-widget-builder/backend/api/widgets/delete.php", {
           method: "DELETE",
           headers: { "Content-Type": "application/json" },
           credentials: "include",

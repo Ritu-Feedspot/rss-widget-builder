@@ -6,13 +6,12 @@ header('Access-Control-Allow-Headers: Content-Type');
 header('Access-Control-Allow-Credentials: true');
 header('Content-Type: application/json');
 
-// Include DB and Auth
 require_once '../../db/connect.php';
 require_once '../../classes/Auth.php';
 
 try {
     $auth = new Auth();
-    $auth->requireLogin(); // 🔐 Enforce login
+    $auth->requireLogin(); 
 
     $userId = $_SESSION['user_id'] ?? null;
     if (!$userId) {
@@ -26,7 +25,7 @@ try {
 
     $db = new Database();
 
-    // ✅ Only folders owned by this user
+    // Only folders owned by this user
     $sql = "SELECT f.*, COUNT(uff.id) AS feed_count
             FROM folders f
             LEFT JOIN user_followed_feeds uff ON f.id = uff.folder_id

@@ -12,7 +12,7 @@ require_once '../../classes/Auth.php';
 
 try {
     $auth = new Auth();
-    $auth->requireLogin(); // 🔐 Require logged-in session
+    $auth->requireLogin(); 
 
     $userId = $_SESSION['user_id'] ?? null;
     if (!$userId) {
@@ -26,7 +26,7 @@ try {
 
     $db = new Database();
 
-    // ✅ Only fetch feeds for this user's folders
+    // Only fetch feeds for this user's folders
     $sql = "SELECT f.*, uff.folder_id, fo.name AS folder_name
             FROM feeds f
             JOIN user_followed_feeds uff ON f.id = uff.feed_id

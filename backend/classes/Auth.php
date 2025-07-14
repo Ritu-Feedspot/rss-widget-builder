@@ -9,7 +9,7 @@ require_once __DIR__ . '/../db/connect.php';
 
 class Auth {
     private $db;
-    private $sessionTimeout = 3600; // 1 hour in seconds
+    private $sessionTimeout = 3600; 
     
     public function __construct() {
         $this->db = new Database();
@@ -25,7 +25,7 @@ class Auth {
             
             session_start();
             
-            // Check session timeout
+            // Session timeout Checkk
             if (isset($_SESSION['last_activity']) && 
                 (time() - $_SESSION['last_activity'] > $this->sessionTimeout)) {
                 $this->logout();
@@ -37,7 +37,6 @@ class Auth {
     
     public function register($username, $email, $password, $firstName = '', $lastName = '') {
         try {
-            // Validate input
             if (empty($username) || empty($email) || empty($password)) {
                 throw new Exception('All required fields must be filled');
             }
@@ -60,10 +59,8 @@ class Auth {
                 throw new Exception('Username or email already exists');
             }
             
-            // Hash password
             $passwordHash = password_hash($password, PASSWORD_DEFAULT);
             
-            // Insert new user
             $sql = "INSERT INTO users (username, email, password_hash, first_name, last_name) 
                     VALUES (?, ?, ?, ?, ?)";
             
@@ -91,7 +88,6 @@ class Auth {
                 throw new Exception('Username/email and password are required');
             }
             
-            // Find user by username or email
             $sql = "SELECT id, username, email, password_hash, first_name, last_name, role, is_active 
                     FROM users 
                     WHERE (username = ? OR email = ?) AND is_active = 1";
@@ -102,15 +98,12 @@ class Auth {
                 throw new Exception('Invalid credentials');
             }
             
-            // Verify password
             if (!password_verify($password, $user['password_hash'])) {
                 throw new Exception('Invalid credentials');
             }
             
-            // Create session
             $this->createUserSession($user);
             
-            // Update last login
             $this->db->update(
                 "UPDATE users SET last_login = NOW() WHERE id = ?", 
                 [$user['id']]
@@ -139,7 +132,6 @@ class Auth {
         $_SESSION['logged_in'] = true;
         $_SESSION['login_time'] = time();
         
-        // Store session in database for tracking
         $this->storeSessionInDB($user['id']);
     }
     
@@ -150,20 +142,20 @@ class Auth {
             $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
             $expiresAt = date('Y-m-d H:i:s', time() + $this->sessionTimeout);
             
-            // Clean up old sessions for this user
+            // clean OLF session
             $this->db->delete(
                 "DELETE FROM user_sessions WHERE user_id = ? OR expires_at < NOW()", 
                 [$userId]
             );
             
-            // Insert new session
+            // Add new session
             $this->db->insert(
                 "INSERT INTO user_sessions (user_id, session_id, ip_address, user_agent, expires_at) 
                  VALUES (?, ?, ?, ?, ?)",
                 [$userId, $sessionId, $ipAddress, $userAgent, $expiresAt]
             );
         } catch (Exception $e) {
-            // Log error but don't fail login
+
             error_log("Session storage error: " . $e->getMessage());
         }
     }
@@ -180,7 +172,7 @@ class Auth {
     
     public function logout() {
         if (isset($_SESSION['user_id'])) {
-            // Remove session from database
+            // Remove session ffrom DB
             $this->db->delete(
                 "DELETE FROM user_sessions WHERE session_id = ?", 
                 [session_id()]

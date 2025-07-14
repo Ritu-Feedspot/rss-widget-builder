@@ -21,9 +21,9 @@ export default function WidgetPreview({ config }) {
       let url = ""
 
       if (config.selectedFolder && config.selectedFolder !== "") {
-        url = `http://localhost/rss-widget-builder/backend/api/feeds/getFolderFeeds.php?folderId=${encodeURIComponent(config.selectedFolder)}`
+        url = `http://localhost:8081/rss-widget-builder/backend/api/feeds/getFolderFeeds.php?folderId=${encodeURIComponent(config.selectedFolder)}`
       } else if (config.feedUrl) {
-        url = `http://localhost/rss-widget-builder/backend/api/rss/parseRSS.php`
+        url = `http://localhost:8081/rss-widget-builder/backend/api/rss/parseRSS.php`
       } else {
         setFeedData(null)
         setLoading(false)

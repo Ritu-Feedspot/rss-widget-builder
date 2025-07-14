@@ -9,12 +9,13 @@ export default function FollowingSection({ followedFeeds, userFolders, onRefresh
     return followedFeeds.filter((feed) => feed.folder_id === folderId)
   }
 
-  const handleUnfollow = async (feedId) => {
+  const handleUnfollow = async (feedId, folderId) => {
     try {
-      await fetch("/api/feeds/unfollowFeed.php", {
+      await fetch("http://localhost:8081/rss-widget-builder/backend/api/feeds/unfollowFeed.php", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ feedId }),
+        body: JSON.stringify({ feedId, folderId }),
+        credentials: "include"
       })
       onRefresh()
     } catch (error) {
@@ -47,7 +48,7 @@ export default function FollowingSection({ followedFeeds, userFolders, onRefresh
                       <h4>{feed.title}</h4>
                       <p>{feed.url}</p>
                     </div>
-                    <button className="unfollow-btn" onClick={() => handleUnfollow(feed.id)}>
+                    <button className="unfollow-btn" onClick={() => handleUnfollow(feed.id, folder.id)}>
                       Unfollow
                     </button>
                   </div>

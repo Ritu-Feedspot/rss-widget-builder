@@ -10,7 +10,6 @@ require_once '../../db/connect.php';
 require_once '../../classes/Auth.php';
 
 try {
-    // 🔐 Auth & session
     $auth = new Auth();
     $auth->requireLogin();
 
@@ -25,7 +24,6 @@ try {
         throw new Exception("Feed ID and Folder ID are required");
     }
 
-    // ✅ Verify that the folder belongs to the current user
     $folderCheck = $db->fetchOne("SELECT id FROM folders WHERE id = ? AND user_id = ?", [$folderId, $userId]);
     if (!$folderCheck) {
         http_response_code(403);
@@ -36,7 +34,6 @@ try {
         exit;
     }
 
-    // ✅ Check if feed already followed by user in this folder
     $checkSql = "SELECT id FROM user_followed_feeds WHERE feed_id = ? AND folder_id = ? AND user_id = ?";
     $existing = $db->fetchOne($checkSql, [$feedId, $folderId, $userId]);
 
@@ -49,7 +46,6 @@ try {
         exit;
     }
 
-    // ✅ Insert follow record
     $insertSql = "INSERT INTO user_followed_feeds (feed_id, folder_id, user_id, created_at) VALUES (?, ?, ?, NOW())";
     $id = $db->insert($insertSql, [$feedId, $folderId, $userId]);
 
