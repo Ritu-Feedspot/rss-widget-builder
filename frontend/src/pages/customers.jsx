@@ -3,7 +3,7 @@
 import { useState } from "react"
 
 export default function Customers() {
-  // ✅ Static customer list
+  //  Static customer list
   const staticCustomers = [
     { id: 1, name: "TechCrunch", logo: "/techcrunchlogo.png", website: "techcrunch.com" },
     { id: 2, name: "Mashable", logo: "/mashablelogo.png", website: "mashable.com" },

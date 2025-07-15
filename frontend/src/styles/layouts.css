@@ -1,0 +1,341 @@
+/* Feed Item View Types */
+
+/* Reset default feed-item styles when inside a grid/card container */
+.feed-content.grid-layout1-container .feed-item,
+.feed-content.grid-layout2-container .feed-item,
+.feed-content.matrixcard-layout1-container .feed-item,
+.feed-content.matrixcard-layout2-container .feed-item {
+  border-bottom: none; /* Remove default border-bottom */
+  padding: 0; /* Reset padding, individual layouts will add their own */
+  margin-bottom: 0; /* Reset margin-bottom */
+}
+
+/* List Layout 1 (Default) */
+.feed-view-list.feed-layout-list1 {
+  flex-direction: row;
+  align-items: flex-start;
+}
+.feed-view-list.feed-layout-list1 .feed-image {
+  display: none; /* Hide image for list layout */
+}
+.feed-view-list.feed-layout-list1 .feed-text {
+  flex: 1;
+}
+
+/* Grid Layout 1 Container */
+.feed-content.grid-layout1-container {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 columns */
+  gap: 10px;
+  padding: 10px; /* Add padding to the container */
+}
+.feed-content.grid-layout1-container .feed-item {
+  flex-direction: column; /* Ensure item is column for image only */
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 0; /* Remove padding from item itself */
+  margin-bottom: 0; /* Remove margin from item itself */
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  overflow: hidden; /* Hide overflow for image */
+  height: 120px; /* Fixed height for square images */
+  position: relative; /* For text overlay */
+}
+.feed-content.grid-layout1-container .feed-item .feed-image {
+  width: 100%;
+  height: 100%; /* Image fills the item */
+  flex-shrink: 0;
+}
+.feed-content.grid-layout1-container .feed-item .feed-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.feed-content.grid-layout1-container .feed-item .feed-text {
+  position: absolute; /* Overlay text */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%); /* Gradient overlay */
+  color: white;
+  padding: 10px;
+  box-sizing: border-box;
+  opacity: 0; /* Hidden by default */
+  visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+.feed-content.grid-layout1-container .feed-item:hover .feed-text {
+  opacity: 1; /* Show on hover */
+  visibility: visible;
+}
+.feed-content.grid-layout1-container .feed-item .feed-text h4,
+.feed-content.grid-layout1-container .feed-item .feed-text .feed-meta {
+  color: white;
+}
+.feed-content.grid-layout1-container .feed-item .feed-description {
+  display: none; /* Hide description for this layout */
+}
+
+/* Grid Layout 2 Container */
+.feed-content.grid-layout2-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsive columns */
+  gap: 15px;
+  padding: 10px;
+}
+.feed-content.grid-layout2-container .feed-item {
+  flex-direction: column;
+  padding: 10px;
+  margin-bottom: 0;
+  background-color: #fff;
+}
+.feed-content.grid-layout2-container .feed-item .feed-image {
+  width: 100%;
+  height: 100px; /* Fixed height for images */
+  margin-bottom: 8px;
+}
+.feed-content.grid-layout2-container .feed-item .feed-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.feed-content.grid-layout2-container .feed-item .feed-text h4 {
+  font-size: 13px;
+  margin-bottom: 3px;
+}
+.feed-content.grid-layout2-container .feed-item .feed-description {
+  font-size: 0.75rem;
+  line-height: 1.3;
+  margin-bottom: 5px;
+}
+.feed-content.grid-layout2-container .feed-item .feed-meta {
+  font-size: 0.7rem;
+}
+
+/* Magazine Layout 1 */
+.feed-view-magazine.feed-layout-magazine1 {
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 15px 0;
+  border-bottom: 1px solid #eee;
+}
+.feed-view-magazine.feed-layout-magazine1 .feed-image {
+  width: 120px;
+  height: 90px;
+  margin-right: 15px;
+}
+.feed-view-magazine.feed-layout-magazine1 .feed-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.feed-view-magazine.feed-layout-magazine1 .feed-text h4 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+.feed-view-magazine.feed-layout-magazine1 .feed-description {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 10px;
+}
+.feed-view-magazine.feed-layout-magazine1 .feed-meta {
+  font-size: 0.8rem;
+}
+
+/* Magazine Layout 2 */
+.feed-view-magazine.feed-layout-magazine2 {
+  flex-direction: column;
+  border-bottom: 1px solid #eee;
+  padding: 15px 0;
+}
+.feed-view-magazine.feed-layout-magazine2 .feed-image {
+  width: 100%;
+  height: 180px;
+  margin-bottom: 15px;
+}
+.feed-view-magazine.feed-layout-magazine2 .feed-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.feed-view-magazine.feed-layout-magazine2 .feed-text h4 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+.feed-view-magazine.feed-layout-magazine2 .feed-description {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+.feed-view-magazine.feed-layout-magazine2 .feed-meta {
+  font-size: 0.85rem;
+}
+
+/* Matrix Card Layout 1 Container */
+.feed-content.matrixcard-layout1-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two columns */
+  grid-auto-rows: minmax(100px, auto); /* Auto-adjust row height */
+  gap: 10px;
+  padding: 10px; /* Add padding to the container */
+}
+
+.feed-content.matrixcard-layout1-container .feed-item {
+  border: none;
+  padding: 0;
+  margin-bottom: 0;
+  box-shadow: none;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  position: relative; /* For text overlay */
+}
+
+.feed-content.matrixcard-layout1-container .feed-item:first-child {
+  grid-column: 1; /* First item spans the first column */
+  grid-row: span 2; /* First item spans two rows */
+}
+
+.feed-content.matrixcard-layout1-container .feed-item .feed-image {
+  width: 100%;
+  height: 100%; /* Image fills the item's height */
+  flex-shrink: 0;
+}
+.feed-content.matrixcard-layout1-container .feed-item .feed-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px 6px 0 0;
+}
+
+.feed-content.matrixcard-layout1-container .feed-item .feed-text {
+  padding: 10px;
+  position: absolute; /* Overlay text */
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%); /* Gradient overlay */
+  color: white;
+  box-sizing: border-box;
+}
+.feed-content.matrixcard-layout1-container .feed-item .feed-text h4,
+.feed-content.matrixcard-layout1-container .feed-item .feed-text .feed-meta {
+  color: white;
+}
+.feed-content.matrixcard-layout1-container .feed-item .feed-description {
+  display: none; /* Hide description for this layout */
+}
+
+/* Matrix Card Layout 2 Container */
+.feed-content.matrixcard-layout2-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* Responsive columns */
+  gap: 15px;
+  padding: 10px;
+}
+.feed-content.matrixcard-layout2-container .feed-item {
+  flex-direction: column;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 0;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  background-color: #fff;
+}
+.feed-content.matrixcard-layout2-container .feed-item .feed-image {
+  width: 100%;
+  height: 100px; /* Fixed height for images */
+  margin-bottom: 15px;
+}
+.feed-content.matrixcard-layout2-container .feed-item .feed-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 6px;
+}
+.feed-content.matrixcard-layout2-container .feed-item .feed-text h4 {
+  font-size: 1rem;
+  margin-bottom: 5px;
+  color: #333;
+}
+.feed-content.matrixcard-layout2-container .feed-item .feed-description {
+  font-size: 0.8rem;
+  line-height: 1.3;
+  color: #555;
+  margin-bottom: 8px;
+}
+.feed-content.matrixcard-layout2-container .feed-item .feed-meta {
+  font-size: 0.7rem;
+  color: #777;
+}
+
+/* Carousel Layout 1 & 2 */
+.feed-content.carousel-container {
+  position: relative;
+  overflow: hidden; /* Hide items outside the view */
+  padding: 10px; /* Add padding to the container */
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 0.5s ease-in-out;
+}
+
+.feed-view-carousel.feed-layout-carousel1,
+.feed-view-carousel.feed-layout-carousel2 {
+  flex-direction: column;
+  flex-shrink: 0; /* Prevent items from shrinking */
+  width: 100%; /* Each item takes full width of the container */
+  border: 1px solid #eee; /* Add back border for individual items */
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  background-color: #fff;
+  padding: 15px; /* Add padding to individual items */
+  box-sizing: border-box; /* Include padding in width/height */
+}
+
+.feed-view-carousel.feed-layout-carousel1 .feed-image,
+.feed-view-carousel.feed-layout-carousel2 .feed-image {
+  width: 100%;
+  height: 200px; /* Fixed height for carousel image */
+  margin-bottom: 15px; /* Add margin below image */
+}
+.feed-view-carousel.feed-layout-carousel1 .feed-image img,
+.feed-view-carousel.feed-layout-carousel2 .feed-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 4px; /* Adjust border-radius */
+}
+.feed-view-carousel.feed-layout-carousel1 .feed-text,
+.feed-view-carousel.feed-layout-carousel2 .feed-text {
+  position: static; /* Remove absolute positioning for text */
+  background: none; /* Remove gradient background */
+  color: inherit; /* Inherit color */
+  padding: 0; /* Remove padding */
+}
+.feed-view-carousel.feed-layout-carousel1 .feed-text h4,
+.feed-view-carousel.feed-layout-carousel2 .feed-text h4 {
+  font-size: 1.2rem; /* Adjust font size */
+  margin-bottom: 10px;
+  color: #333; /* Set text color */
+}
+.feed-view-carousel.feed-layout-carousel1 .feed-text .feed-description,
+.feed-view-carousel.feed-layout-carousel2 .feed-text .feed-description {
+  display: block; /* Show description for carousel */
+  font-size: 0.9rem;
+  line-height: 1.5;
+  margin-bottom: 10px;
+  color: #555;
+}
+.feed-view-carousel.feed-layout-carousel1 .feed-text .feed-meta,
+.feed-view-carousel.feed-layout-carousel2 .feed-text .feed-meta {
+  font-size: 0.8rem;
+  color: #777;
+}

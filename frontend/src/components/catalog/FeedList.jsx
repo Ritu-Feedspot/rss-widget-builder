@@ -28,10 +28,10 @@ export default function FeedList({ feeds, category, onFollowFeed, followedFeeds 
                   </button>
                 ) : (
                   <button className="btn btn-follow" onClick={() => onFollowFeed(feed)}>
-                    Follow
+                    Follow and Add to Folder
                   </button>
                 )}
-                <button className="btn btn-secondary">Add to Folder</button>
+                {/* <button className="btn btn-secondary">Add to Folder</button> */}
               </div>
             </div>
           </div>

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
-import { useAuth } from "../contexts/AuthContext" // ✅ make sure this exists
+import { useAuth } from "../contexts/AuthContext" //  make sure this exists
 
 export default function MyWidgets() {
   const { user, loading: authLoading } = useAuth()
@@ -19,7 +19,7 @@ export default function MyWidgets() {
   const fetchWidgets = async () => {
     try {
       const response = await fetch("http://localhost:8081/rss-widget-builder/backend/api/widgets/read.php", {
-        credentials: "include", // ✅ Include session cookies
+        credentials: "include", //  Include session cookies
       })
 
       if (response.status === 401) {

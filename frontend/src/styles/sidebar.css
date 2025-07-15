@@ -1,0 +1,108 @@
+/* Sidebar Styles */
+.sidebar {
+  width: 250px;
+  background-color: #2c3e50;
+  color: white;
+  transition: width 0.3s ease;
+  position: fixed;
+  height: 100vh;
+  overflow-y: auto;
+  position: fixed;
+  z-index: 10; /* ensures it stays visually above any input or modal */
+}
+
+.sidebar.collapsed {
+  width: 60px;
+}
+
+.sidebar-header {
+  padding: 20px;
+  border-bottom: 1px solid #34495e;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-text {
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.collapse-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.sidebar-nav {
+  padding: 20px 0;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 20px;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.2s;
+}
+
+.nav-item:hover {
+  background-color: #34495e;
+}
+
+.nav-icon {
+  margin-right: 10px;
+  font-size: 18px;
+}
+
+.collapsed .nav-label {
+  display: none;
+}
+
+/* Sidebar Authentication */
+.sidebar-footer {
+  margin-top: auto;
+  padding: 20px 0;
+  border-top: 1px solid #34495e;
+}
+
+.user-info {
+  border-bottom: 1px solid #34495e;
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.user-name {
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.user-email {
+  font-size: 12px;
+  color: #bdc3c7;
+}
+
+.login-btn,
+.logout-btn {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  padding: 12px 20px;
+  display: flex;
+}
+
+.logout-btn:hover,
+.login-btn:hover {
+  background-color: #34495e;
+}
+
+.collapsed .user-info {
+  display: none;
+}

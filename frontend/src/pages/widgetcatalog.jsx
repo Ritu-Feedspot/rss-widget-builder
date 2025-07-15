@@ -178,7 +178,7 @@ export default function WidgetCatalog() {
         isOpen={showAuthModal}
         onClose={() => setShowAuthModal(false)}
         onAuthSuccess={(user) => {
-          login(user) // ✅ use the login method from context
+          login(user) 
           setShowAuthModal(false)
         }}
       />

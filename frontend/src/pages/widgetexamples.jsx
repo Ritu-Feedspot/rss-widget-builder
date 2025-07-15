@@ -1,6 +1,25 @@
 "use client"
+import { useState } from "react"
+import { useAuth } from "../contexts/AuthContext"
+import AuthModal from "../components/auth/AuthModal"
+import Link from "next/link"
 
 export default function WidgetExamples() {
+  const { isAuthenticated, login } = useAuth()
+  const [showAuthModal, setShowAuthModal] = useState(false)
+
+  const handleCreateWidgetClick = (e) => {
+    if (!isAuthenticated) {
+      e.preventDefault() 
+      setShowAuthModal(true)
+    }
+  }
+  const handleAuthSuccess = (userData) => {
+    login(userData)
+    setShowAuthModal(false)
+    // Optionally redirect after successful login, e.g., to /createwidgets
+    window.location.href = "/createwidgets"
+  }
   const examples = [
     {
       id: 1,
@@ -56,11 +75,11 @@ export default function WidgetExamples() {
           <div key={example.id} className="example-card">
             <div className="example-preview">
               <img src={example.preview_image} alt={example.name} />
-              <div className="example-overlay">
+              {/* <div className="example-overlay">
                 <button className="btn btn-primary" onClick={() => handleUseTemplate(example)}>
                   Use This Template
                 </button>
-              </div>
+              </div> */}
             </div>
 
             <div className="example-content">
@@ -86,11 +105,12 @@ export default function WidgetExamples() {
 
       <div className="custom-widget-cta">
         <h2>Need a Custom Widget?</h2>
-        <p>Can't find what you're looking for? Create your own custom widget from scratch.</p>
-        <a href="/createwidgets" className="btn btn-primary btn-large">
-          Create Custom Widget
-        </a>
+        
+        <Link href="/createwidgets" className="btn btn-primary" onClick={handleCreateWidgetClick}>
+            Create Your Own Widget
+        </Link>
       </div>
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} onAuthSuccess={handleAuthSuccess} />
     </div>
   );
 }

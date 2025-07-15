@@ -166,7 +166,6 @@ export default function WidgetPreview({ config }) {
           style={{ overflowY: "auto", height: "calc(100% - 40px)" }}
         >
           {" "}
-          {/* Added overflowY and height */}
           {loading && (
             <div className="feed-loading">
               <p>Loading feed data...</p>

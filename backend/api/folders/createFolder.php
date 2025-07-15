@@ -30,7 +30,7 @@ try {
         throw new Exception("Folder name is required.");
     }
 
-    // ✅ Insert with user_id
+    //  Insert with user_id
     $sql = "INSERT INTO folders (user_id, name, created_at) VALUES (?, ?, NOW())";
     $folderId = $db->insert($sql, [$userId, $input['name']]);
 

@@ -1,0 +1,79 @@
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+    z-index: 1000;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .widget-builder {
+    grid-template-columns: 1fr;
+  }
+
+  .preview-sticky {
+    position: sticky;
+  }
+
+  .quick-actions {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 columns on smaller screens */
+  }
+
+  .feeds-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .examples-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .customers-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  }
+
+  .testimonials-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .widgets-table-container {
+    overflow-x: auto;
+  }
+
+  .widgets-table {
+    min-width: 600px;
+  }
+
+  .widget-actions {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .btn-small {
+    width: 100%;
+  }
+
+  /* Responsive Auth Modal */
+  .auth-modal {
+    width: 95%;
+    margin: 20px;
+  }
+
+  .auth-form {
+    padding: 30px 20px 20px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+}
