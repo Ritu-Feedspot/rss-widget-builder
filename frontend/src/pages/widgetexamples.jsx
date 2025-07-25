@@ -17,7 +17,6 @@ export default function WidgetExamples() {
   const handleAuthSuccess = (userData) => {
     login(userData)
     setShowAuthModal(false)
-    // Optionally redirect after successful login, e.g., to /createwidgets
     window.location.href = "/createwidgets"
   }
   const examples = [
@@ -25,7 +24,7 @@ export default function WidgetExamples() {
       id: 1,
       name: "Tech News Widget",
       description: "Display latest technology news in a clean, modern layout",
-      preview_image: "/placeholder.svg?height=200&width=300",
+      preview_image: "technewswid.png?height=200&width=300",
       category: "News",
       features: ["Responsive design", "Custom colors", "Show/hide author"],
     },

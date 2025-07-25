@@ -275,67 +275,119 @@
   color: #777;
 }
 
-/* Carousel Layout 1 & 2 */
+/* === Carousel Layout Core === */
 .feed-content.carousel-container {
   position: relative;
-  overflow: hidden; /* Hide items outside the view */
-  padding: 10px; /* Add padding to the container */
+  overflow: hidden;
+  padding: 0;
+  height: 100%;
 }
 
 .carousel-track {
   display: flex;
+  height: 100%;
   transition: transform 0.5s ease-in-out;
 }
 
-.feed-view-carousel.feed-layout-carousel1,
-.feed-view-carousel.feed-layout-carousel2 {
+.feed-view-carousel {
+  flex-shrink: 0;
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  display: flex;
   flex-direction: column;
-  flex-shrink: 0; /* Prevent items from shrinking */
-  width: 100%; /* Each item takes full width of the container */
-  border: 1px solid #eee; /* Add back border for individual items */
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-  background-color: #fff;
-  padding: 15px; /* Add padding to individual items */
-  box-sizing: border-box; /* Include padding in width/height */
+  justify-content: flex-start;
+  overflow: hidden;
 }
 
-.feed-view-carousel.feed-layout-carousel1 .feed-image,
-.feed-view-carousel.feed-layout-carousel2 .feed-image {
-  width: 100%;
-  height: 200px; /* Fixed height for carousel image */
-  margin-bottom: 15px; /* Add margin below image */
+/* === Carousel Layout 1: White Card with Text === */
+.feed-view-carousel.feed-layout-carousel1 {
+  background: white;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+  padding: 15px;
 }
-.feed-view-carousel.feed-layout-carousel1 .feed-image img,
-.feed-view-carousel.feed-layout-carousel2 .feed-image img {
+
+.feed-layout-carousel1 .feed-image {
+  flex: 1 0 auto;
+  width: 100%;
+  height: 60%;
+  overflow: hidden;
+}
+
+.feed-layout-carousel1 .feed-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 4px; /* Adjust border-radius */
+  display: block;
+  border-radius: 4px;
 }
-.feed-view-carousel.feed-layout-carousel1 .feed-text,
-.feed-view-carousel.feed-layout-carousel2 .feed-text {
-  position: static; /* Remove absolute positioning for text */
-  background: none; /* Remove gradient background */
-  color: inherit; /* Inherit color */
-  padding: 0; /* Remove padding */
+
+.feed-layout-carousel1 .feed-text {
+  padding: 15px 0 0 0;
+  color: #333;
+  background: none;
 }
-.feed-view-carousel.feed-layout-carousel1 .feed-text h4,
-.feed-view-carousel.feed-layout-carousel2 .feed-text h4 {
-  font-size: 1.2rem; /* Adjust font size */
-  margin-bottom: 10px;
-  color: #333; /* Set text color */
+
+/* === Carousel Layout 2: Sheer Overlay on Image === */
+.feed-view-carousel.feed-layout-carousel2 {
+  position: relative;
 }
-.feed-view-carousel.feed-layout-carousel1 .feed-text .feed-description,
-.feed-view-carousel.feed-layout-carousel2 .feed-text .feed-description {
-  display: block; /* Show description for carousel */
-  font-size: 0.9rem;
-  line-height: 1.5;
-  margin-bottom: 10px;
-  color: #555;
+
+.feed-layout-carousel2 .feed-image {
+  position: relative;
+  width: 100%;
+  height: 100%;
 }
-.feed-view-carousel.feed-layout-carousel1 .feed-text .feed-meta,
-.feed-view-carousel.feed-layout-carousel2 .feed-text .feed-meta {
-  font-size: 0.8rem;
-  color: #777;
+
+.feed-layout-carousel2 .feed-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.feed-layout-carousel2 .feed-text {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  background: linear-gradient(to top, rgba(0,0,0,0.7), rgba(0,0,0,0));
+  color: white;
+}
+
+.feed-layout-carousel2 .feed-text h4,
+.feed-layout-carousel2 .feed-text .feed-description,
+.feed-layout-carousel2 .feed-text .feed-meta {
+  color: white;
+}
+
+/* Carousel Navigation Buttons */
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+  border: none;
+  padding: 10px;
+  cursor: pointer;
+  z-index: 2;
+  font-size: 24px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-nav-btn.left {
+  left: 10px;
+}
+
+.carousel-nav-btn.right {
+  right: 10px;
 }

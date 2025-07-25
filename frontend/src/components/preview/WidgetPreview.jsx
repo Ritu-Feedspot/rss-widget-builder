@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import CarouselView from "./CarouselView"
 
 export default function WidgetPreview({ config }) {
   const [feedData, setFeedData] = useState(null)
@@ -182,7 +183,9 @@ export default function WidgetPreview({ config }) {
             </div>
           )}
           {!loading &&
-            !error &&
+            !error && config.viewType === "carousel" ? (
+              <CarouselView config={config} feedItems={getDisplayItems()} />
+            ) : (
             getDisplayItems().map((item, index) => (
               <div key={index} className={getFeedItemClasses()}>
                 {" "}
@@ -258,7 +261,7 @@ export default function WidgetPreview({ config }) {
                   )}
                 </div>
               </div>
-            ))}
+            )))}
         </div>
       </div>
     </div>
